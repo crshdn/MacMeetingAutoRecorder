@@ -47,6 +47,7 @@ final class ScreenCaptureManager: NSObject, ObservableObject {
     private var audioInput: AVAssetWriterInput?
     private var recordingStartTime: Date?
     private var durationTimer: Timer?
+    private var sessionStarted = false
     
     // Recording settings
     private let targetWidth: Int = 1920
@@ -189,6 +190,7 @@ final class ScreenCaptureManager: NSObject, ObservableObject {
         isRecording = false
         recordingDuration = 0
         recordingStartTime = nil
+        sessionStarted = false
         
         print("ScreenCaptureManager: Recording stopped")
         
@@ -282,11 +284,10 @@ final class ScreenCaptureManager: NSObject, ObservableObject {
         let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         
         // Start session on first sample
-        if writer.status == .writing && videoInput?.isReadyForMoreMediaData == true {
-            // Ensure session is started
-            if case .unknown = writer.status {
-                writer.startSession(atSourceTime: timestamp)
-            }
+        if !sessionStarted {
+            writer.startSession(atSourceTime: timestamp)
+            sessionStarted = true
+            print("ScreenCaptureManager: Session started at \(timestamp.seconds)")
         }
         
         switch type {
