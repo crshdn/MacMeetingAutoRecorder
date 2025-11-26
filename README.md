@@ -77,23 +77,23 @@ On first run, macOS will ask for these permissions. **All are required for full 
 
 ## 🚀 How It Works
 
-### 1. Launch the App
-The app runs in your **menu bar** (no dock icon). Look for the ⏺ icon.
+### Fully Automatic Mode (Default)
 
-### 2. Start a Meeting
-Open **Zoom**, **Microsoft Teams**, or **Google Meet** in any browser.
+1. **Launch the app** — It runs in your menu bar (⏺ icon)
+2. **Join a meeting** — Open Zoom, Teams, or Google Meet
+3. **Recording starts automatically** — You'll see a notification
+4. **End the meeting** — Close the app or leave the call
+5. **Auto-saved!** — Recording saves to your default folder automatically
 
-### 3. Choose Display
-A dialog appears asking which display to record. Optionally check "Remember this choice."
+**That's it. No clicking. No dialogs. Just works.**
 
-### 4. Recording Starts
-The menu bar icon turns **red** 🔴 to indicate recording is active.
+> 💡 Recordings are saved to `~/Movies/Call Recordings/` by default. Change this in Preferences.
 
-### 5. End the Meeting
-Close the meeting app. The recording stops automatically.
+### Manual Mode (Optional)
 
-### 6. Save Your Recording
-A save dialog appears. Name your file and choose where to save it.
+If you prefer more control, disable "Fully Automatic Mode" in Preferences:
+- Choose which display to record
+- Name and save files manually after each recording
 
 ---
 
@@ -122,9 +122,10 @@ Click the menu bar icon → **Preferences** to configure:
 
 | Setting | Description |
 |---------|-------------|
-| **Watched Apps** | Toggle which apps trigger recording prompts |
-| **Default Save Folder** | Where recordings are saved by default |
-| **Display Selection** | Ask every time vs. remember per app |
+| **Fully Automatic Mode** | Zero-interaction recording (enabled by default) |
+| **Watched Apps** | Toggle which apps trigger recordings |
+| **Default Save Folder** | Where recordings are auto-saved |
+| **Display Selection** | (Manual mode) Ask every time vs. remember per app |
 | **Start at Login** | Auto-launch when you log in |
 
 ---

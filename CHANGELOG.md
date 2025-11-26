@@ -1,6 +1,27 @@
 # Changelog
 
-All notable changes to AutoCallRecorder will be documented in this file.
+All notable changes to MacMeetingAutoRecorder will be documented in this file.
+
+## [1.1.0] - 2024-11-26
+
+### Added - Fully Automatic Mode
+
+- **Fully Automatic Mode** (enabled by default):
+  - Auto-starts recording when a meeting app is detected (no prompts)
+  - Uses main display or remembered display choice
+  - Auto-saves to default folder when meeting ends (no save dialog)
+  - Shows system notifications for: recording started, recording saved, errors
+  
+- **Preferences Toggle**: Users can switch between:
+  - Fully Automatic Mode (zero interaction)
+  - Manual Mode (prompts for display selection and save location)
+
+### Changed
+
+- Default behavior is now fully automatic (no user interaction required)
+- Improved notification system using modern UserNotifications framework
+
+---
 
 ## [1.0.0] - 2024-11-26
 

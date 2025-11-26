@@ -136,45 +136,62 @@ struct PreferencesView: View {
     
     private var displayBehaviorSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Display Selection", systemImage: "display")
+            Label("Recording Mode", systemImage: "record.circle")
                 .font(.headline)
             
-            Picker("", selection: $preferencesManager.askEveryTime) {
-                Text("Ask every time").tag(true)
-                Text("Remember per app").tag(false)
-            }
-            .pickerStyle(.radioGroup)
-            .labelsHidden()
-            
-            if !preferencesManager.askEveryTime {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Remembered displays:")
+            Toggle(isOn: $preferencesManager.fullyAutomatic) {
+                VStack(alignment: .leading) {
+                    Text("Fully Automatic Mode")
+                    Text("Auto-start recording and auto-save when meeting ends")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    
-                    if preferencesManager.rememberedDisplays.isEmpty {
-                        Text("None yet")
+                }
+            }
+            
+            if !preferencesManager.fullyAutomatic {
+                Divider()
+                
+                Text("Display Selection")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Picker("", selection: $preferencesManager.askEveryTime) {
+                    Text("Ask every time").tag(true)
+                    Text("Remember per app").tag(false)
+                }
+                .pickerStyle(.radioGroup)
+                .labelsHidden()
+                
+                if !preferencesManager.askEveryTime {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Remembered displays:")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                            .italic()
-                    } else {
-                        ForEach(Array(preferencesManager.rememberedDisplays.keys), id: \.self) { appKey in
-                            if let app = WatchedApp(rawValue: appKey) {
-                                HStack {
-                                    Text("• \(app.displayName)")
+                        
+                        if preferencesManager.rememberedDisplays.isEmpty {
+                            Text("None yet")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .italic()
+                        } else {
+                            ForEach(Array(preferencesManager.rememberedDisplays.keys), id: \.self) { appKey in
+                                if let app = WatchedApp(rawValue: appKey) {
+                                    HStack {
+                                        Text("• \(app.displayName)")
+                                            .font(.caption)
+                                        Spacer()
+                                        Button("Clear") {
+                                            preferencesManager.clearRememberedDisplay(for: app)
+                                        }
                                         .font(.caption)
-                                    Spacer()
-                                    Button("Clear") {
-                                        preferencesManager.clearRememberedDisplay(for: app)
+                                        .buttonStyle(.link)
                                     }
-                                    .font(.caption)
-                                    .buttonStyle(.link)
                                 }
                             }
                         }
                     }
+                    .padding(.leading, 20)
                 }
-                .padding(.leading, 20)
             }
         }
         .padding()

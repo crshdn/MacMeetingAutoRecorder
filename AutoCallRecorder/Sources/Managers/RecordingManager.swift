@@ -2,6 +2,7 @@ import Foundation
 import AppKit
 import Combine
 import ScreenCaptureKit
+import UserNotifications
 
 /// Orchestrates the entire recording workflow
 @MainActor
@@ -68,7 +69,44 @@ final class RecordingManager: ObservableObject {
         return await screenCaptureManager.checkPermission()
     }
     
-    /// Start recording on the specified display
+    /// Start recording automatically (no prompts, with notification)
+    func startRecordingAutomatic(displayID: UInt32, for app: WatchedApp) async {
+        guard state.isIdle else {
+            print("RecordingManager: Cannot start automatic recording, current state: \(state)")
+            return
+        }
+        
+        // Check permission first
+        guard await screenCaptureManager.checkPermission() else {
+            lastError = ScreenCaptureError.permissionDenied.localizedDescription
+            showNotification(title: "Recording Failed", body: "Screen recording permission required. Please enable in System Settings.")
+            return
+        }
+        
+        do {
+            // Start capture
+            let tempURL = try await screenCaptureManager.startRecording(displayID: displayID)
+            
+            // Update state
+            tempFileURL = tempURL
+            recordingApp = app
+            recordingStartTime = Date()
+            state = .recording(app: app, displayID: displayID, startTime: Date())
+            
+            // Show notification
+            showNotification(title: "Recording Started", body: "Recording \(app.displayName) meeting...")
+            
+            print("RecordingManager: Automatic recording started for \(app.displayName)")
+            
+        } catch {
+            lastError = error.localizedDescription
+            state = .idle
+            showNotification(title: "Recording Failed", body: error.localizedDescription)
+            print("RecordingManager: Failed to start automatic recording: \(error)")
+        }
+    }
+    
+    /// Start recording on the specified display (manual mode with prompts)
     func startRecording(displayID: CGDirectDisplayID, for app: WatchedApp, rememberChoice: Bool) async {
         guard state.isIdle || state == .awaitingUserChoice(app: app) else {
             print("RecordingManager: Cannot start recording, current state: \(state)")
@@ -120,9 +158,31 @@ final class RecordingManager: ObservableObject {
         do {
             if let tempURL = try await screenCaptureManager.stopRecording() {
                 tempFileURL = tempURL
-                state = .saving(tempFileURL: tempURL, app: app, startTime: startTime)
-                showingSaveDialog = true
-                print("RecordingManager: Recording stopped, ready to save")
+                
+                // Fully automatic mode - auto-save without prompts
+                if preferencesManager.fullyAutomatic {
+                    let filename = generateFilename(for: app, startTime: startTime)
+                    let destinationURL = preferencesManager.defaultSaveFolder.appendingPathComponent(filename)
+                    
+                    // Ensure directory exists
+                    try? FileManager.default.createDirectory(at: preferencesManager.defaultSaveFolder, withIntermediateDirectories: true)
+                    
+                    // Remove existing file if any
+                    try? FileManager.default.removeItem(at: destinationURL)
+                    
+                    // Move temp file to destination
+                    try FileManager.default.moveItem(at: tempURL, to: destinationURL)
+                    
+                    showNotification(title: "Recording Saved", body: "Saved: \(filename)")
+                    print("RecordingManager: Auto-saved recording to \(destinationURL.path)")
+                    
+                    cleanup()
+                } else {
+                    // Manual mode - show save dialog
+                    state = .saving(tempFileURL: tempURL, app: app, startTime: startTime)
+                    showingSaveDialog = true
+                    print("RecordingManager: Recording stopped, ready to save")
+                }
             } else {
                 state = .idle
                 print("RecordingManager: Recording stopped but no file produced")
@@ -130,6 +190,7 @@ final class RecordingManager: ObservableObject {
         } catch {
             lastError = error.localizedDescription
             state = .idle
+            showNotification(title: "Save Failed", body: error.localizedDescription)
             print("RecordingManager: Error stopping recording: \(error)")
         }
         
@@ -260,7 +321,28 @@ final class RecordingManager: ObservableObject {
         
         print("RecordingManager: Detected \(app.displayName)")
         
-        // Check for remembered display
+        // Fully automatic mode - just start recording on main display
+        if preferencesManager.fullyAutomatic {
+            Task {
+                // Use remembered display or default to main display
+                let displayID: UInt32
+                if let remembered = preferencesManager.rememberedDisplay(for: app) {
+                    displayID = remembered
+                } else if let mainDisplay = DisplayInfo.allDisplays().first(where: { $0.isMain }) {
+                    displayID = mainDisplay.id
+                } else if let firstDisplay = DisplayInfo.allDisplays().first {
+                    displayID = firstDisplay.id
+                } else {
+                    print("RecordingManager: No displays found")
+                    return
+                }
+                
+                await startRecordingAutomatic(displayID: displayID, for: app)
+            }
+            return
+        }
+        
+        // Manual mode - check for remembered display
         if let rememberedDisplayID = preferencesManager.rememberedDisplay(for: app) {
             // Use remembered display directly
             Task {
@@ -301,6 +383,37 @@ final class RecordingManager: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd-HHmmss"
         let timestamp = formatter.string(from: startTime)
         return "\(app.shortName)-\(timestamp).mov"
+    }
+    
+    /// Show a system notification
+    private func showNotification(title: String, body: String) {
+        Task {
+            let center = UNUserNotificationCenter.current()
+            
+            // Request permission if needed
+            do {
+                let granted = try await center.requestAuthorization(options: [.alert, .sound])
+                guard granted else { return }
+            } catch {
+                print("Notification permission error: \(error)")
+                return
+            }
+            
+            // Create notification content
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = body
+            content.sound = .default
+            
+            // Create request
+            let request = UNNotificationRequest(
+                identifier: UUID().uuidString,
+                content: content,
+                trigger: nil // Deliver immediately
+            )
+            
+            try? await center.add(request)
+        }
     }
     
     private func showPermissionAlert() {

@@ -29,6 +29,11 @@ final class PreferencesManager: ObservableObject {
         didSet { UserDefaults.standard.set(askEveryTime, forKey: Keys.askEveryTime) }
     }
     
+    /// Fully automatic mode - no prompts, just record and save
+    @Published var fullyAutomatic: Bool {
+        didSet { UserDefaults.standard.set(fullyAutomatic, forKey: Keys.fullyAutomatic) }
+    }
+    
     /// Whether to start at login
     @Published var startAtLogin: Bool {
         didSet { 
@@ -54,6 +59,7 @@ final class PreferencesManager: ObservableObject {
         static let watchTeams = "watchTeams"
         static let watchGoogleMeet = "watchGoogleMeet"
         static let askEveryTime = "askEveryTime"
+        static let fullyAutomatic = "fullyAutomatic"
         static let startAtLogin = "startAtLogin"
         static let saveFolderBookmark = "saveFolderBookmark"
         static let rememberedDisplays = "rememberedDisplays"
@@ -67,6 +73,7 @@ final class PreferencesManager: ObservableObject {
         self.watchTeams = UserDefaults.standard.object(forKey: Keys.watchTeams) as? Bool ?? true
         self.watchGoogleMeet = UserDefaults.standard.object(forKey: Keys.watchGoogleMeet) as? Bool ?? true
         self.askEveryTime = UserDefaults.standard.object(forKey: Keys.askEveryTime) as? Bool ?? true
+        self.fullyAutomatic = UserDefaults.standard.object(forKey: Keys.fullyAutomatic) as? Bool ?? true  // Default to automatic
         self.startAtLogin = UserDefaults.standard.object(forKey: Keys.startAtLogin) as? Bool ?? false
         
         // Load remembered displays
