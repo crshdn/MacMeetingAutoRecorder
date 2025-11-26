@@ -25,6 +25,7 @@
 		A1000021201D0021 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000021101D0021 /* AVFoundation.framework */; };
 		A1000022201D0022 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000022101D0022 /* CoreMedia.framework */; };
 		A1000023201D0023 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000023101D0023 /* ServiceManagement.framework */; };
+		A1000030201D0030 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000030101D0030 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		A1000021101D0021 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		A1000022101D0022 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		A1000023101D0023 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		A1000030101D0030 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,17 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A10000FD001DFFFD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000030201D0030 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXGroup section */
 		A10000AA001DAAAA = {
@@ -81,6 +94,7 @@
 				A1000001101D0001 /* AutoCallRecorderApp.swift */,
 				A1000015101D0015 /* Info.plist */,
 				A1000016101D0016 /* AutoCallRecorder.entitlements */,
+				A1000030101D0030 /* Assets.xcassets */,
 				A10000EE001DEEEE /* Models */,
 				A10000FF001DFFAA /* Managers */,
 				A10000GG001DGGGG /* Views */,
@@ -150,6 +164,7 @@
 			buildPhases = (
 				A10000FE001DFFFE /* Sources */,
 				A10000FF001DFFFF /* Frameworks */,
+				A10000FD001DFFFD /* Resources */,
 			);
 			buildRules = (
 			);
