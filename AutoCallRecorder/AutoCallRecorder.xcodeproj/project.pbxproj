@@ -1,0 +1,422 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1000001201D0001 /* AutoCallRecorderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001101D0001 /* AutoCallRecorderApp.swift */; };
+		A1000002201D0002 /* RecordingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002101D0002 /* RecordingState.swift */; };
+		A1000003201D0003 /* WatchedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000003101D0003 /* WatchedApp.swift */; };
+		A1000004201D0004 /* DisplayInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004101D0004 /* DisplayInfo.swift */; };
+		A1000005201D0005 /* PreferencesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000005101D0005 /* PreferencesManager.swift */; };
+		A1000006201D0006 /* LoginItemManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000006101D0006 /* LoginItemManager.swift */; };
+		A1000007201D0007 /* AppWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000007101D0007 /* AppWatcher.swift */; };
+		A1000008201D0008 /* BrowserWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000008101D0008 /* BrowserWatcher.swift */; };
+		A1000009201D0009 /* ScreenCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000009101D0009 /* ScreenCaptureManager.swift */; };
+		A1000010201D0010 /* RecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000010101D0010 /* RecordingManager.swift */; };
+		A1000011201D0011 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000011101D0011 /* MenuBarView.swift */; };
+		A1000012201D0012 /* ScreenSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000012101D0012 /* ScreenSelectionView.swift */; };
+		A1000013201D0013 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000013101D0013 /* PreferencesView.swift */; };
+		A1000014201D0014 /* SaveDialogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000014101D0014 /* SaveDialogHelper.swift */; };
+		A1000020201D0020 /* ScreenCaptureKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000020101D0020 /* ScreenCaptureKit.framework */; };
+		A1000021201D0021 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000021101D0021 /* AVFoundation.framework */; };
+		A1000022201D0022 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000022101D0022 /* CoreMedia.framework */; };
+		A1000023201D0023 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000023101D0023 /* ServiceManagement.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A1000000001D0000 /* AutoCallRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoCallRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000001101D0001 /* AutoCallRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCallRecorderApp.swift; sourceTree = "<group>"; };
+		A1000002101D0002 /* RecordingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingState.swift; sourceTree = "<group>"; };
+		A1000003101D0003 /* WatchedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedApp.swift; sourceTree = "<group>"; };
+		A1000004101D0004 /* DisplayInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayInfo.swift; sourceTree = "<group>"; };
+		A1000005101D0005 /* PreferencesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesManager.swift; sourceTree = "<group>"; };
+		A1000006101D0006 /* LoginItemManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginItemManager.swift; sourceTree = "<group>"; };
+		A1000007101D0007 /* AppWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppWatcher.swift; sourceTree = "<group>"; };
+		A1000008101D0008 /* BrowserWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserWatcher.swift; sourceTree = "<group>"; };
+		A1000009101D0009 /* ScreenCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCaptureManager.swift; sourceTree = "<group>"; };
+		A1000010101D0010 /* RecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManager.swift; sourceTree = "<group>"; };
+		A1000011101D0011 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		A1000012101D0012 /* ScreenSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSelectionView.swift; sourceTree = "<group>"; };
+		A1000013101D0013 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
+		A1000014101D0014 /* SaveDialogHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDialogHelper.swift; sourceTree = "<group>"; };
+		A1000015101D0015 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1000016101D0016 /* AutoCallRecorder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AutoCallRecorder.entitlements; sourceTree = "<group>"; };
+		A1000020101D0020 /* ScreenCaptureKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenCaptureKit.framework; path = System/Library/Frameworks/ScreenCaptureKit.framework; sourceTree = SDKROOT; };
+		A1000021101D0021 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		A1000022101D0022 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		A1000023101D0023 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A10000FF001DFFFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000020201D0020 /* ScreenCaptureKit.framework in Frameworks */,
+				A1000021201D0021 /* AVFoundation.framework in Frameworks */,
+				A1000022201D0022 /* CoreMedia.framework in Frameworks */,
+				A1000023201D0023 /* ServiceManagement.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A10000AA001DAAAA = {
+			isa = PBXGroup;
+			children = (
+				A10000BB001DBBBB /* Sources */,
+				A10000CC001DCCCC /* Frameworks */,
+				A10000DD001DDDDD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A10000BB001DBBBB /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A1000001101D0001 /* AutoCallRecorderApp.swift */,
+				A1000015101D0015 /* Info.plist */,
+				A1000016101D0016 /* AutoCallRecorder.entitlements */,
+				A10000EE001DEEEE /* Models */,
+				A10000FF001DFFAA /* Managers */,
+				A10000GG001DGGGG /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		A10000CC001DCCCC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A1000020101D0020 /* ScreenCaptureKit.framework */,
+				A1000021101D0021 /* AVFoundation.framework */,
+				A1000022101D0022 /* CoreMedia.framework */,
+				A1000023101D0023 /* ServiceManagement.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A10000DD001DDDDD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000001D0000 /* AutoCallRecorder.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A10000EE001DEEEE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A1000002101D0002 /* RecordingState.swift */,
+				A1000003101D0003 /* WatchedApp.swift */,
+				A1000004101D0004 /* DisplayInfo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A10000FF001DFFAA /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				A1000005101D0005 /* PreferencesManager.swift */,
+				A1000006101D0006 /* LoginItemManager.swift */,
+				A1000007101D0007 /* AppWatcher.swift */,
+				A1000008101D0008 /* BrowserWatcher.swift */,
+				A1000009101D0009 /* ScreenCaptureManager.swift */,
+				A1000010101D0010 /* RecordingManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		A10000GG001DGGGG /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A1000011101D0011 /* MenuBarView.swift */,
+				A1000012101D0012 /* ScreenSelectionView.swift */,
+				A1000013101D0013 /* PreferencesView.swift */,
+				A1000014101D0014 /* SaveDialogHelper.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1FFFFFF001DFFFF /* AutoCallRecorder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1EEEEEE001DEEEE /* Build configuration list for PBXNativeTarget "AutoCallRecorder" */;
+			buildPhases = (
+				A10000FE001DFFFE /* Sources */,
+				A10000FF001DFFFF /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AutoCallRecorder;
+			productName = AutoCallRecorder;
+			productReference = A1000000001D0000 /* AutoCallRecorder.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1AAAAAA001DAAAA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A1FFFFFF001DFFFF = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = A1DDDDDD001DDDDD /* Build configuration list for PBXProject "AutoCallRecorder" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A10000AA001DAAAA;
+			productRefGroup = A10000DD001DDDDD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1FFFFFF001DFFFF /* AutoCallRecorder */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A10000FE001DFFFE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001201D0001 /* AutoCallRecorderApp.swift in Sources */,
+				A1000002201D0002 /* RecordingState.swift in Sources */,
+				A1000003201D0003 /* WatchedApp.swift in Sources */,
+				A1000004201D0004 /* DisplayInfo.swift in Sources */,
+				A1000005201D0005 /* PreferencesManager.swift in Sources */,
+				A1000006201D0006 /* LoginItemManager.swift in Sources */,
+				A1000007201D0007 /* AppWatcher.swift in Sources */,
+				A1000008201D0008 /* BrowserWatcher.swift in Sources */,
+				A1000009201D0009 /* ScreenCaptureManager.swift in Sources */,
+				A1000010201D0010 /* RecordingManager.swift in Sources */,
+				A1000011201D0011 /* MenuBarView.swift in Sources */,
+				A1000012201D0012 /* ScreenSelectionView.swift in Sources */,
+				A1000013201D0013 /* PreferencesView.swift in Sources */,
+				A1000014201D0014 /* SaveDialogHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A1CCCCCC001DCCCC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A1CCCCCD001DCCCD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		A1EEEEEF001DEEEF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Sources/AutoCallRecorder.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024. All rights reserved.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "AutoCallRecorder needs microphone access to record audio during your meetings.";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meetingrecorder.AutoCallRecorder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A1EEEEF0001DEEF0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Sources/AutoCallRecorder.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024. All rights reserved.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "AutoCallRecorder needs microphone access to record audio during your meetings.";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meetingrecorder.AutoCallRecorder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1DDDDDD001DDDDD /* Build configuration list for PBXProject "AutoCallRecorder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1CCCCCC001DCCCC /* Debug */,
+				A1CCCCCD001DCCCD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1EEEEEE001DEEEE /* Build configuration list for PBXNativeTarget "AutoCallRecorder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1EEEEEF001DEEEF /* Debug */,
+				A1EEEEF0001DEEF0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A1AAAAAA001DAAAA /* Project object */;
+}
+
