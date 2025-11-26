@@ -2,6 +2,34 @@
 
 All notable changes to MacMeetingAutoRecorder will be documented in this file.
 
+## [1.2.0] - 2024-11-26
+
+### Fixed
+
+- **Comet Browser Detection**: Updated bundle ID from `com.cometbrowser.Comet` to `ai.perplexity.comet` (Perplexity's Comet browser)
+
+### Added
+
+- **Automatic Display Detection**: App now automatically detects which screen the browser window is on and records that display instead of defaulting to the main display
+  - Uses Accessibility API to get browser window position
+  - Calculates which display contains the window center point
+  - Falls back to main display if detection fails
+
+- **Comprehensive Logging**: Added `os.log` logging throughout for debugging
+  - BrowserWatcher: Logs permission checks, browser detection, window titles, display detection
+  - RecordingManager: Logs app detection, display selection, recording start/stop
+  - ScreenCaptureManager: Logs permission checks and errors
+  - All logs visible in Console.app under subsystem `com.meetingrecorder.AutoCallRecorder`
+
+### Technical Changes
+
+- `BrowserWatcher` now returns display ID along with Google Meet detection
+- `onGoogleMeetDetected` callback now passes `CGDirectDisplayID?` parameter
+- Added `getWindowInfo()` method to get window frames via Accessibility API
+- Added `getDisplayID(for:)` method to determine display from window frame
+
+---
+
 ## [1.1.0] - 2024-11-26
 
 ### Added - Fully Automatic Mode

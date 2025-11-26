@@ -3,6 +3,7 @@ import ScreenCaptureKit
 import AVFoundation
 import CoreMedia
 import Combine
+import os.log
 
 /// Errors that can occur during screen capture
 enum ScreenCaptureError: LocalizedError {
@@ -32,6 +33,10 @@ enum ScreenCaptureError: LocalizedError {
 @MainActor
 final class ScreenCaptureManager: NSObject, ObservableObject {
     
+    // MARK: - Logging
+    
+    private static let logger = Logger(subsystem: "com.meetingrecorder.AutoCallRecorder", category: "ScreenCaptureManager")
+    
     // MARK: - Published Properties
     
     @Published private(set) var isRecording = false
@@ -58,12 +63,14 @@ final class ScreenCaptureManager: NSObject, ObservableObject {
     
     /// Check if screen recording permission is granted
     func checkPermission() async -> Bool {
+        Self.logger.notice("checkPermission() called")
         do {
             // Requesting shareable content will prompt for permission if not granted
-            _ = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
+            let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
+            Self.logger.notice("Permission granted ✓ - found \(content.displays.count) displays")
             return true
-        } catch {
-            print("ScreenCaptureManager: Permission check failed: \(error)")
+        } catch let error as NSError {
+            Self.logger.error("Permission check FAILED: \(error.localizedDescription) (code: \(error.code), domain: \(error.domain))")
             return false
         }
     }

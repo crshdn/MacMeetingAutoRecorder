@@ -3,10 +3,15 @@ import AppKit
 import Combine
 import ScreenCaptureKit
 import UserNotifications
+import os.log
 
 /// Orchestrates the entire recording workflow
 @MainActor
 final class RecordingManager: ObservableObject {
+    
+    // MARK: - Logging
+    
+    private static let logger = Logger(subsystem: "com.meetingrecorder.AutoCallRecorder", category: "RecordingManager")
     
     // MARK: - Published Properties
     
@@ -52,9 +57,10 @@ final class RecordingManager: ObservableObject {
     
     /// Start monitoring for meeting apps
     func startMonitoring() {
+        Self.logger.notice("startMonitoring() called")
         appWatcher.startWatching()
         browserWatcher.startWatching()
-        print("RecordingManager: Started monitoring for meeting apps")
+        Self.logger.notice("Started monitoring for meeting apps")
     }
     
     /// Stop monitoring
@@ -71,20 +77,26 @@ final class RecordingManager: ObservableObject {
     
     /// Start recording automatically (no prompts, with notification)
     func startRecordingAutomatic(displayID: UInt32, for app: WatchedApp) async {
+        Self.logger.notice("startRecordingAutomatic() called for \(app.displayName) on display \(displayID)")
+        
         guard state.isIdle else {
-            print("RecordingManager: Cannot start automatic recording, current state: \(state)")
+            Self.logger.error("Cannot start automatic recording - state is not idle: \(String(describing: self.state))")
             return
         }
         
         // Check permission first
+        Self.logger.notice("Checking screen recording permission...")
         guard await screenCaptureManager.checkPermission() else {
+            Self.logger.error("Screen recording permission DENIED")
             lastError = ScreenCaptureError.permissionDenied.localizedDescription
             showNotification(title: "Recording Failed", body: "Screen recording permission required. Please enable in System Settings.")
             return
         }
+        Self.logger.notice("Screen recording permission granted ✓")
         
         do {
             // Start capture
+            Self.logger.notice("Starting screen capture...")
             let tempURL = try await screenCaptureManager.startRecording(displayID: displayID)
             
             // Update state
@@ -96,13 +108,13 @@ final class RecordingManager: ObservableObject {
             // Show notification
             showNotification(title: "Recording Started", body: "Recording \(app.displayName) meeting...")
             
-            print("RecordingManager: Automatic recording started for \(app.displayName)")
+            Self.logger.notice("🎬 Recording STARTED for \(app.displayName) - temp file: \(tempURL.path)")
             
         } catch {
+            Self.logger.error("Failed to start recording: \(error.localizedDescription)")
             lastError = error.localizedDescription
             state = .idle
             showNotification(title: "Recording Failed", body: error.localizedDescription)
-            print("RecordingManager: Failed to start automatic recording: \(error)")
         }
     }
     
@@ -275,7 +287,7 @@ final class RecordingManager: ObservableObject {
         // Handle native app launches
         appWatcher.onWatchedAppLaunched = { [weak self] app in
             Task { @MainActor in
-                self?.handleAppDetected(app)
+                self?.handleAppDetected(app, detectedDisplayID: nil)
             }
         }
         
@@ -286,10 +298,10 @@ final class RecordingManager: ObservableObject {
             }
         }
         
-        // Handle Google Meet detection
-        browserWatcher.onGoogleMeetDetected = { [weak self] in
+        // Handle Google Meet detection (with display ID from browser window)
+        browserWatcher.onGoogleMeetDetected = { [weak self] displayID in
             Task { @MainActor in
-                self?.handleAppDetected(.googleMeet)
+                self?.handleAppDetected(.googleMeet, detectedDisplayID: displayID)
             }
         }
         
@@ -306,37 +318,47 @@ final class RecordingManager: ObservableObject {
             .assign(to: &$recordingDuration)
     }
     
-    private func handleAppDetected(_ app: WatchedApp) {
+    private func handleAppDetected(_ app: WatchedApp, detectedDisplayID: CGDirectDisplayID?) {
+        Self.logger.notice("handleAppDetected() called for: \(app.displayName), detectedDisplayID: \(detectedDisplayID ?? 0)")
+        
         // Ignore if already recording
         guard state.isIdle else {
-            print("RecordingManager: Ignoring \(app.displayName), already recording")
+            Self.logger.error("Ignoring \(app.displayName) - already recording (state: \(String(describing: self.state)))")
             return
         }
         
         // Check if this app is being watched
         guard preferencesManager.isWatching(app) else {
-            print("RecordingManager: \(app.displayName) not being watched")
+            Self.logger.error("\(app.displayName) is not being watched in preferences")
             return
         }
         
-        print("RecordingManager: Detected \(app.displayName)")
+        Self.logger.notice("✓ \(app.displayName) detected and is being watched")
+        Self.logger.notice("fullyAutomatic mode: \(self.preferencesManager.fullyAutomatic)")
         
-        // Fully automatic mode - just start recording on main display
+        // Fully automatic mode - just start recording
         if preferencesManager.fullyAutomatic {
             Task {
-                // Use remembered display or default to main display
+                // Priority: detected display > remembered display > main display > first display
                 let displayID: UInt32
-                if let remembered = preferencesManager.rememberedDisplay(for: app) {
+                if let detected = detectedDisplayID {
+                    Self.logger.notice("Using detected display (where browser window is): \(detected)")
+                    displayID = detected
+                } else if let remembered = preferencesManager.rememberedDisplay(for: app) {
+                    Self.logger.notice("Using remembered display: \(remembered)")
                     displayID = remembered
                 } else if let mainDisplay = DisplayInfo.allDisplays().first(where: { $0.isMain }) {
+                    Self.logger.notice("Using main display: \(mainDisplay.id)")
                     displayID = mainDisplay.id
                 } else if let firstDisplay = DisplayInfo.allDisplays().first {
+                    Self.logger.notice("Using first display: \(firstDisplay.id)")
                     displayID = firstDisplay.id
                 } else {
-                    print("RecordingManager: No displays found")
+                    Self.logger.error("No displays found - cannot record!")
                     return
                 }
                 
+                Self.logger.notice("Starting automatic recording on display \(displayID)...")
                 await startRecordingAutomatic(displayID: displayID, for: app)
             }
             return
@@ -344,11 +366,13 @@ final class RecordingManager: ObservableObject {
         
         // Manual mode - check for remembered display
         if let rememberedDisplayID = preferencesManager.rememberedDisplay(for: app) {
+            Self.logger.notice("Manual mode: using remembered display \(rememberedDisplayID)")
             // Use remembered display directly
             Task {
                 await startRecording(displayID: rememberedDisplayID, for: app, rememberChoice: false)
             }
         } else {
+            Self.logger.notice("Manual mode: showing screen selection dialog")
             // Show screen selection dialog
             pendingApp = app
             state = .awaitingUserChoice(app: app)

@@ -102,7 +102,7 @@ enum MonitoredBrowser: String, CaseIterable {
         case .chrome:
             return ["com.google.Chrome", "com.google.Chrome.canary"]
         case .comet:
-            return ["com.cometbrowser.Comet", "app.cometbrowser.Comet"]
+            return ["ai.perplexity.comet"]
         case .firefox:
             return ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition"]
         case .edge:

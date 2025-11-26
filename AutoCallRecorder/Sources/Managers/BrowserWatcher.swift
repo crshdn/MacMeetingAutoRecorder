@@ -1,10 +1,15 @@
 import Foundation
 import AppKit
 import Combine
+import os.log
 
 /// Monitors browser windows for Google Meet tabs using Accessibility API
 @MainActor
 final class BrowserWatcher: ObservableObject {
+    
+    // MARK: - Logging
+    
+    private static let logger = Logger(subsystem: "com.meetingrecorder.AutoCallRecorder", category: "BrowserWatcher")
     
     // MARK: - Published Properties
     
@@ -14,10 +19,13 @@ final class BrowserWatcher: ObservableObject {
     /// The browser where Google Meet was detected
     @Published private(set) var activeBrowser: String?
     
+    /// The display ID where Google Meet window is located
+    @Published private(set) var detectedDisplayID: CGDirectDisplayID?
+    
     // MARK: - Callbacks
     
-    /// Called when Google Meet is first detected
-    var onGoogleMeetDetected: (() -> Void)?
+    /// Called when Google Meet is first detected (passes the display ID where the window is)
+    var onGoogleMeetDetected: ((CGDirectDisplayID?) -> Void)?
     
     /// Called when Google Meet is no longer detected
     var onGoogleMeetEnded: (() -> Void)?
@@ -55,16 +63,26 @@ final class BrowserWatcher: ObservableObject {
     func startWatching() {
         stopWatching()
         
+        Self.logger.notice("startWatching() called")
+        
         guard preferencesManager.watchGoogleMeet else {
-            print("BrowserWatcher: Google Meet watching is disabled")
+            Self.logger.error("Google Meet watching is DISABLED in preferences")
             return
         }
         
+        Self.logger.notice("Google Meet watching is enabled, checking Accessibility permissions...")
+        
         // Check Accessibility permissions
         guard checkAccessibilityPermissions() else {
-            print("BrowserWatcher: Accessibility permissions not granted")
+            Self.logger.error("Accessibility permissions NOT GRANTED - cannot read window titles")
             return
         }
+        
+        Self.logger.notice("Accessibility permissions granted ✓")
+        
+        // Log which browsers we're watching for
+        let browserBundleIDs = MonitoredBrowser.allBundleIdentifiers
+        Self.logger.notice("Monitoring for browsers: \(browserBundleIDs.joined(separator: ", "))")
         
         // Start polling timer
         pollingTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { [weak self] _ in
@@ -76,14 +94,14 @@ final class BrowserWatcher: ObservableObject {
         // Do an initial check
         checkForGoogleMeet()
         
-        print("BrowserWatcher: Started watching for Google Meet")
+        Self.logger.notice("Started watching for Google Meet (polling every \(self.pollingInterval)s)")
     }
     
     /// Stop monitoring
     func stopWatching() {
         pollingTimer?.invalidate()
         pollingTimer = nil
-        print("BrowserWatcher: Stopped watching")
+        Self.logger.info("Stopped watching")
     }
     
     /// Reset session state
@@ -115,45 +133,82 @@ final class BrowserWatcher: ObservableObject {
         
         var foundMeet = false
         var foundBrowser: String?
+        var foundDisplayID: CGDirectDisplayID?
+        var browsersChecked: [String] = []
+        var allTitlesFound: [String: [String]] = [:]
         
         for app in runningApps {
-            guard let bundleID = app.bundleIdentifier,
-                  browserBundleIDs.contains(bundleID) else { continue }
+            guard let bundleID = app.bundleIdentifier else { continue }
             
-            // Get window titles for this browser
-            if let windowTitles = getWindowTitles(for: app) {
-                for title in windowTitles {
-                    if containsMeetPattern(title) {
-                        foundMeet = true
-                        foundBrowser = app.localizedName ?? bundleID
-                        break
+            // Check if this is a monitored browser
+            if browserBundleIDs.contains(bundleID) {
+                browsersChecked.append("\(app.localizedName ?? "Unknown") (\(bundleID))")
+                
+                // Get window info for this browser (titles and frames)
+                if let windowInfo = getWindowInfo(for: app) {
+                    allTitlesFound[bundleID] = windowInfo.map { $0.title }
+                    
+                    for info in windowInfo {
+                        if containsMeetPattern(info.title) {
+                            foundMeet = true
+                            foundBrowser = app.localizedName ?? bundleID
+                            foundDisplayID = getDisplayID(for: info.frame)
+                            Self.logger.info("✓ MATCH FOUND: '\(info.title)' in \(foundBrowser ?? "unknown") on display \(foundDisplayID ?? 0)")
+                            break
+                        }
                     }
+                } else {
+                    Self.logger.debug("No window titles returned for \(bundleID) - Accessibility issue?")
+                    allTitlesFound[bundleID] = ["<no titles - accessibility denied?>"]
                 }
             }
             
             if foundMeet { break }
         }
         
+        // Log periodic status (every ~10 seconds = every 5th check)
+        if Int.random(in: 0..<5) == 0 {
+            if browsersChecked.isEmpty {
+                Self.logger.notice("Poll: No monitored browsers running")
+            } else {
+                Self.logger.notice("Poll: Checked \(browsersChecked.count) browser(s): \(browsersChecked.joined(separator: ", "))")
+                for (bundleID, titles) in allTitlesFound {
+                    Self.logger.notice("  \(bundleID) windows: \(titles.joined(separator: " | "))")
+                }
+            }
+        }
+        
         // Handle state changes
         if foundMeet && !isGoogleMeetActive {
             isGoogleMeetActive = true
             activeBrowser = foundBrowser
-            print("BrowserWatcher: Google Meet detected in \(foundBrowser ?? "unknown browser")")
+            detectedDisplayID = foundDisplayID
+            Self.logger.notice("🎬 Google Meet DETECTED in \(foundBrowser ?? "unknown browser") on display \(foundDisplayID ?? 0) - triggering recording")
             
             if !hasPromptedThisSession {
                 hasPromptedThisSession = true
-                onGoogleMeetDetected?()
+                Self.logger.notice("Calling onGoogleMeetDetected callback with display \(foundDisplayID ?? 0)...")
+                onGoogleMeetDetected?(foundDisplayID)
+            } else {
+                Self.logger.error("Already prompted this session, not triggering again")
             }
         } else if !foundMeet && isGoogleMeetActive {
             isGoogleMeetActive = false
             activeBrowser = nil
-            print("BrowserWatcher: Google Meet no longer detected")
+            detectedDisplayID = nil
+            Self.logger.notice("🛑 Google Meet NO LONGER DETECTED - stopping recording")
             onGoogleMeetEnded?()
         }
     }
     
-    /// Get window titles for a running application using Accessibility API
-    private func getWindowTitles(for app: NSRunningApplication) -> [String]? {
+    /// Window info containing title and frame
+    private struct WindowInfo {
+        let title: String
+        let frame: CGRect
+    }
+    
+    /// Get window info (titles and frames) for a running application using Accessibility API
+    private func getWindowInfo(for app: NSRunningApplication) -> [WindowInfo]? {
         let pid = app.processIdentifier
         let appElement = AXUIElementCreateApplication(pid)
         
@@ -162,21 +217,78 @@ final class BrowserWatcher: ObservableObject {
         
         guard result == .success,
               let windows = windowsRef as? [AXUIElement] else {
+            // Log the error code for debugging
+            Self.logger.debug("AXUIElement failed for PID \(pid): error code \(result.rawValue)")
             return nil
         }
         
-        var titles: [String] = []
+        var windowInfos: [WindowInfo] = []
         
         for window in windows {
+            // Get title
             var titleRef: CFTypeRef?
             let titleResult = AXUIElementCopyAttributeValue(window, kAXTitleAttribute as CFString, &titleRef)
+            guard titleResult == .success, let title = titleRef as? String, !title.isEmpty else {
+                continue
+            }
             
-            if titleResult == .success, let title = titleRef as? String, !title.isEmpty {
-                titles.append(title)
+            // Get position
+            var positionRef: CFTypeRef?
+            let positionResult = AXUIElementCopyAttributeValue(window, kAXPositionAttribute as CFString, &positionRef)
+            var position = CGPoint.zero
+            if positionResult == .success, let positionValue = positionRef {
+                AXValueGetValue(positionValue as! AXValue, .cgPoint, &position)
+            }
+            
+            // Get size
+            var sizeRef: CFTypeRef?
+            let sizeResult = AXUIElementCopyAttributeValue(window, kAXSizeAttribute as CFString, &sizeRef)
+            var size = CGSize.zero
+            if sizeResult == .success, let sizeValue = sizeRef {
+                AXValueGetValue(sizeValue as! AXValue, .cgSize, &size)
+            }
+            
+            let frame = CGRect(origin: position, size: size)
+            windowInfos.append(WindowInfo(title: title, frame: frame))
+        }
+        
+        return windowInfos.isEmpty ? nil : windowInfos
+    }
+    
+    /// Get window titles for a running application using Accessibility API (legacy method)
+    private func getWindowTitles(for app: NSRunningApplication) -> [String]? {
+        return getWindowInfo(for: app)?.map { $0.title }
+    }
+    
+    /// Determine which display contains the center of the given window frame
+    private func getDisplayID(for windowFrame: CGRect) -> CGDirectDisplayID? {
+        // Get the center point of the window
+        let centerPoint = CGPoint(
+            x: windowFrame.midX,
+            y: windowFrame.midY
+        )
+        
+        // Get all online displays
+        var displayCount: UInt32 = 0
+        CGGetOnlineDisplayList(0, nil, &displayCount)
+        
+        guard displayCount > 0 else { return nil }
+        
+        var displays = [CGDirectDisplayID](repeating: 0, count: Int(displayCount))
+        CGGetOnlineDisplayList(displayCount, &displays, &displayCount)
+        
+        // Find which display contains the center point
+        for displayID in displays {
+            let displayBounds = CGDisplayBounds(displayID)
+            if displayBounds.contains(centerPoint) {
+                Self.logger.debug("Window center (\(centerPoint.x), \(centerPoint.y)) is on display \(displayID)")
+                return displayID
             }
         }
         
-        return titles.isEmpty ? nil : titles
+        // Fallback: return main display if no match found
+        Self.logger.debug("No display found for window center, using main display")
+        return CGMainDisplayID()
     }
     
     /// Check if a window title contains a Google Meet pattern
